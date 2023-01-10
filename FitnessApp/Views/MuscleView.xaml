@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="FitnessApp.Views.MuscleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FitnessApp.Views" xmlns:listviews="clr-namespace:FitnessApp.Controls.ListViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBox Text="{Binding Path=MuscleFilter,UpdateSourceTrigger=PropertyChanged}"
+                 Margin="20 15"
+                 HorizontalAlignment="Left"
+                 MinWidth="300"
+                 Height="22"/>
+
+        <listviews:MuscleListView Grid.Row="1"/>
+
+        <UniformGrid Rows="3"
+                     Grid.Row="1"
+                     Grid.Column="1">
+            <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Nuevo Músculo" HorizontalAlignment="Left" Margin="0 20 20 20"/>
+                    <TextBox Text="{Binding Path=NewMuscle.Name, ValidatesOnDataErrors=True, ValidatesOnExceptions=True,UpdateSourceTrigger=PropertyChanged}"
+                             CharacterCasing="Upper"
+                             Margin="0 0 20 0"
+                             MinWidth="300"/>
+                <UniformGrid Columns="2" Margin="20">
+                    <Button Content="Crear" HorizontalAlignment="Left"
+                            Command="{Binding Path=NewMuscle_Command}"/>
+                    <Button Content="Cancelar" HorizontalAlignment="Center"
+                            Command="{Binding Path=CancelNew_Command}"/>
+                </UniformGrid>
+            </StackPanel>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Editar Músculo" HorizontalAlignment="Left" Margin="0 20 20 20"/>
+                <TextBox Text="{Binding Path=EditMuscle.Name, ValidatesOnDataErrors=True, ValidatesOnExceptions=True,UpdateSourceTrigger=PropertyChanged}"
+                             CharacterCasing="Upper"
+                             Margin="0 0 20 0"
+                             MinWidth="300"/>
+                <UniformGrid Columns="2" Margin="20">
+                    <Button Content="Editar" HorizontalAlignment="Left"
+                            Command="{Binding Path=EditMuscle_Command}"/>
+                    <Button Content="Cancelar" HorizontalAlignment="Center"
+                            Command="{Binding Path=CancelEdit_Command}"/>
+                </UniformGrid>
+            </StackPanel>
+            <Button Content="Eliminar" Command="{Binding DeleteMuscle_Command}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"/>
+        </UniformGrid>
+    </Grid>
+</UserControl>

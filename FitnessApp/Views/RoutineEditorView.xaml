@@ -1,0 +1,136 @@
+﻿<Window x:Class="FitnessApp.Views.RoutineEditorView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FitnessApp.Views" 
+        xmlns:controls="clr-namespace:FitnessApp.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:listviews="clr-namespace:FitnessApp.Controls.ListViews"
+        xmlns:converters="clr-namespace:FitnessApp.Converters" xmlns:filters="clr-namespace:FitnessApp.Filters"
+        AutomationProperties.Name="{Binding Title, RelativeSource={RelativeSource Self}}"
+        WindowState="Maximized"
+        Style="{StaticResource MaterialDesignWindow}"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        Title="Editor de rutinas" Height="450" Width="800">
+    <Window.Resources>
+        <converters:TimeModelConverter x:Key="TimeConverter"/>
+        <converters:TextToIntegerConverter x:Key="IntegerConverter"/>
+    </Window.Resources>
+    <materialDesign:DialogHost
+        Identifier="RoutineEditor_DialogHost"
+        DialogTheme="Inherit">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <UniformGrid Columns="6" Margin="10 20">
+                <TextBox Text="{Binding Path=Routine.Name}"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.FloatingScale="1"
+                         materialDesign:HintAssist.Hint="Nombre" 
+                         Margin="10 0"/>
+
+                <TextBox Text="{Binding Path=Routine.Duration, ValidatesOnExceptions=True,ValidatesOnDataErrors=True, Converter={StaticResource TimeConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Margin="10 0"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Duración por estación" 
+                         materialDesign:HintAssist.FloatingScale="1"
+                         TextChanged="TextBox_TextChanged"
+                         PreviewTextInput="TextBox_PreviewTextInput"
+                         TextAlignment="Right"/>
+                
+                <TextBox Text="{Binding Path=Routine.Rest, ValidatesOnExceptions=True,ValidatesOnDataErrors=True, Converter={StaticResource TimeConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Margin="10 0"
+                         materialDesign:HintAssist.FloatingScale="1"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Descanso" 
+                         TextChanged="TextBox_TextChanged"
+                         PreviewTextInput="TextBox_PreviewTextInput"
+                         TextAlignment="Right"/>
+
+                <TextBox Text="{Binding Path=Routine.Laps, ValidatesOnExceptions=True,ValidatesOnDataErrors=True, Converter={StaticResource IntegerConverter}, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Margin="10 0"
+                         Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.FloatingScale="1"
+                         materialDesign:HintAssist.Hint="Vueltas" 
+                         TextChanged="TextBox_TextChanged"
+                         PreviewTextInput="TextBox_PreviewTextInput"
+                         TextAlignment="Right"/>
+                
+                <TextBlock Text="{Binding Path=Routine.TotalTime,StringFormat=Tiempo Total: {0}, Converter={StaticResource TimeConverter}, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="10 0"
+                         TextAlignment="Right"/>    
+            </UniformGrid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <filters:ExerciseFilter DataContext="{Binding Path=ExerciseFilter}"/>
+                <filters:ExerciseFilter DataContext="{Binding Path=AuxExerciseFilter}"
+                                        Grid.Column="2"/>
+
+                <ScrollViewer Grid.Row="1">
+                    <listviews:RoutineListView SourceBindingPath="Routine.Exercises.Collection"
+                                               SelectedItemBindingPath="Routine.Exercises.SelectedItem"
+                                               DoubleClick_Command="{Binding Path=DeleteExercise_Command}"
+                                               Margin="15 0"/>
+                </ScrollViewer>
+                <StackPanel Margin="15 35"
+                            Grid.Row="1"
+                            Grid.Column="1">
+                    <Button Width="120"
+                            Margin="0 20"
+                            Command="{Binding Path=AddExercise_Command}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Kind="ArrowLeft"
+                                                     FontSize="16"
+                                                     Foreground="White"/>
+                        </Button.Content>
+                    </Button>
+                    <Button Command="{Binding Path=DeleteExercise_Command}">
+                        <Button.Content>
+                            <materialDesign:PackIcon Kind="ArrowRight"
+                                                     FontSize="16"
+                                                     Foreground="White"/>
+                        </Button.Content>
+                    </Button>
+
+                </StackPanel>
+                <ScrollViewer Grid.Column="2"
+                              Grid.Row="1">
+                    <listviews:RoutineListView SourceBindingPath="AuxExercises.Collection"
+                                               SelectedItemBindingPath="AuxExercises.SelectedItem"
+                                               DoubleClick_Command="{Binding Path=AddExercise_Command}"
+                                               Margin="15 0"/>
+                </ScrollViewer>
+                
+                
+            </Grid>
+
+            <StackPanel Grid.Row="3"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Button Content="ACEPTAR" Margin="20" Click="AcceptButton_Click"/>
+                <Button Content="CANCELAR" Margin="20" Click="Button_Click"/>
+            </StackPanel>
+        </Grid>
+
+    </materialDesign:DialogHost>
+</Window>
